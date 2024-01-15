@@ -1,5 +1,19 @@
-from script import calcular_md5sum
+import hashlib
 
+def calcular_md5sum(ruta_archivo, tamano_bloque=65536):
+    md5 = hashlib.md5()
+    try:
+        with open(ruta_archivo, 'rb') as archivo:
+            for bloque in iter(lambda: archivo.read(tamano_bloque), b''):
+                md5.update(bloque)
+        return md5.hexdigest()
+    except FileNotFoundError:
+        print(f"Error: El archivo '{ruta_archivo}' no se encontró.")
+        return None
+    except Exception as e:
+        print(f"Error al calcular el hash MD5: {e}")
+        return None
+    
 def get_hashes(filepath):
     with open(filepath, "r") as f:
         expected_hashes = [line.strip() for line in f.readlines()]
